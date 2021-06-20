@@ -33,27 +33,95 @@ function oldScrabbleScorer(word) {
 // don't change the names or your program won't work as expected. //
 
 function initialPrompt() {
-   console.log("Let's play some scrabble! Enter a word:");
+   console.log("Let's play some scrabble!");
+  let word = input.question("Enter a word to score:");
+  let score = oldScrabbleScorer(word);
+  console.log(score);
+  return word
 };
 
-let simpleScore;
+function simpleScore(word){
+return word.length;
+};
+//console.log(simpleScore("Pine"));
+//let simpleScore;
+// each letter in the array is 1 point 
 
-let vowelBonusScore;
+function vowelBonusScore(word){
+  let vowels = "aeiou";
+  let numberScore = 0;
+  for(let i =0; i < word.length; i++){
+    if (vowels.includes(word[i])){
+      numberScore += 3;
 
-let scrabbleScore;
+    }else{
+      numberScore ++;
 
-const scoringAlgorithms = [];
+    }
+  }
+  return numberScore;
+};
 
-function scorerPrompt() {}
+let scrabbleScore = function(word) {
+  word = word.toLowerCase();
+  let total = 0;
+  for (let i = 0; i < word.length; i++) {
+    total += newPointStructure[word[i]];
+  }
+  return total;
+} 
 
-function transform() {};
+const scoringAlgorithms = [{
+  name:"Simple Score",
+  description:"Each letter is worth 1 point.",
+  scoringFunction: simpleScore
+},
 
-let newPointStructure;
+{
+  name:"Bonus Vowels",
+  description:"Vowels are 3 pts, consonants are 1 pt.",
+  scoringFunction: vowelBonusScore
+},
+
+{
+  name:"Scrabble",
+  description:"The traditional scoring algorithm.",
+  scoringFunction: scrabbleScore	
+}]
+
+function scorerPrompt(word) {let playerInput = input.question('Which scoring algorithm would you like to use?\n\n0 - Simple Score: Each letter is worth 1 point.\n1 - Bonus Vowels: Vowels are worth 3 pts, and consonants are 1 pt. \n2 - Scrabble: The traditional scoring algorithm.\n\nEnter 0, 1, or 2: ');
+  if (playerInput == 0) {
+    console.log(`Score for '${word}' is `+ scoringAlgorithms[0].scoringFunction(word));
+  }
+  if (playerInput == 1) {
+    console.log(`Score for '${word}' is `+ scoringAlgorithms[1].scoringFunction(word));
+  }
+  if (playerInput == 2) {
+    console.log(`Score for '${word}' is `+ scoringAlgorithms[2].scoringFunction(word));
+  }
+}
+
+
+function transform(oldPointStructure){
+  let newObj = {};
+  for (const[key,value] of Object.entries(oldPointStructure)) {
+    for (const newValue of value) {
+      newObj[newValue.toLowerCase()] = Number(key);
+    }
+  }
+  return newObj;
+}
+let newPointStructure = transform(oldPointStructure); 
+
+//let newPointStructure;
 
 function runProgram() {
-   initialPrompt();
-   
+   let word = initialPrompt();
+   scorerPrompt(word);
 }
+
+
+
 
 // Don't write any code below this line //
 // And don't change these or your program will not run as expected //
